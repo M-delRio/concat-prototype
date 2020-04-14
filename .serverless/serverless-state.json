@@ -159,7 +159,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/simpleMerge/dev/1585105581154-2020-03-25T03:06:21.154Z/simpleMerge.zip"
+                "S3Key": "serverless/simpleMerge/dev/1586888001869-2020-04-14T18:13:21.869Z/simpleMerge.zip"
               },
               "FunctionName": "simpleMerge-dev-simpleMerge",
               "Handler": "handler.simpleMerge",
@@ -176,6 +176,9 @@
                 "Variables": {
                   "TRANSCODED_CHUNKS_BUCKET": "bento-transcoded-segments",
                   "END_BUCKET": "bento-video-end",
+                  "VIDEOS_TABLE": "BentoVideos",
+                  "JOBS_TABLE": "BentoJobs",
+                  "SEGMENTS_TABLE": "BentoSegments",
                   "LD_LIBRARY_PATH": "/opt/awscli/lib",
                   "PYTHONHOME": "/opt/awscli/lib/python2.7",
                   "PYTHONPATH": "/opt/awscli/lib/python2.7:/opt/awscli/lib/python2.7/lib-dynload"
@@ -190,14 +193,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "SimpleMergeLambdaVersionCyaUXbXAuhKsPVwHaCNCp5H19InJKyfqJm9c0H8w": {
+          "SimpleMergeLambdaVersionvbw34sKoiiEKj3GzC4Mj89kIvcF1RROfA2afsYaVMI": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SimpleMergeLambdaFunction"
               },
-              "CodeSha256": "XIBtAk2gb1N6JNh2ZuXTlzcOcrmcbC23h/X2Oww14L4="
+              "CodeSha256": "Rfnn0gy/pT6YB/KuYCA9EdB83zQIalkeUZWDXsmxOVw="
             }
           }
         },
@@ -210,7 +213,7 @@
           "SimpleMergeLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SimpleMergeLambdaVersionCyaUXbXAuhKsPVwHaCNCp5H19InJKyfqJm9c0H8w"
+              "Ref": "SimpleMergeLambdaVersionvbw34sKoiiEKj3GzC4Mj89kIvcF1RROfA2afsYaVMI"
             }
           }
         }
@@ -295,6 +298,9 @@
         "environment": {
           "TRANSCODED_CHUNKS_BUCKET": "bento-transcoded-segments",
           "END_BUCKET": "bento-video-end",
+          "VIDEOS_TABLE": "BentoVideos",
+          "JOBS_TABLE": "BentoJobs",
+          "SEGMENTS_TABLE": "BentoSegments",
           "LD_LIBRARY_PATH": "/opt/awscli/lib",
           "PYTHONHOME": "/opt/awscli/lib/python2.7",
           "PYTHONPATH": "/opt/awscli/lib/python2.7:/opt/awscli/lib/python2.7/lib-dynload"
@@ -309,16 +315,16 @@
         "memory": 1024,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "SimpleMergeLambdaVersionCyaUXbXAuhKsPVwHaCNCp5H19InJKyfqJm9c0H8w"
+        "versionLogicalId": "SimpleMergeLambdaVersionvbw34sKoiiEKj3GzC4Mj89kIvcF1RROfA2afsYaVMI"
       }
     },
     "serviceFilename": "serverless.yml",
     "layers": {},
     "isDashboardMonitoringPreconfigured": false,
-    "artifact": "/Users/mkwh/Documents/LS/Capstone/video_project/aws/concat-prototype/.serverless/simpleMerge.zip"
+    "artifact": "/Users/mkwh/Documents/LS/Capstone/bento/aws/concat-prototype/.serverless/simpleMerge.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/simpleMerge/dev/1585105581154-2020-03-25T03:06:21.154Z",
+    "artifactDirectoryName": "serverless/simpleMerge/dev/1586888001869-2020-04-14T18:13:21.869Z",
     "artifact": "simpleMerge.zip"
   }
 }

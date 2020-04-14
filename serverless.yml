@@ -30,10 +30,12 @@ functions:
     environment:
       TRANSCODED_CHUNKS_BUCKET: "${self:custom.transcoded-chunks-bucket}"
       END_BUCKET: "${self:custom.end-bucket}"
+      VIDEOS_TABLE: "BentoVideos"
+      JOBS_TABLE: "BentoJobs"
+      SEGMENTS_TABLE: "BentoSegments"
       LD_LIBRARY_PATH: "/opt/awscli/lib"
       PYTHONHOME: "/opt/awscli/lib/python2.7"
       PYTHONPATH: "/opt/awscli/lib/python2.7:/opt/awscli/lib/python2.7/lib-dynload"
     timeout: 900
     layers:
       - ${cf:ffmpeg-layer-dev.FfmpegLayerExport}
-
