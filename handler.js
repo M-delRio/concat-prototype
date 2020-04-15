@@ -1,13 +1,9 @@
-const { spawn, spawnSync, execSync } = require("child_process");
-const { readFileSync, writeFileSync, unlinkSync } = require("fs");
+const { execSync } = require("child_process");
 const AWS = require("aws-sdk");
-const s3 = new AWS.S3();
 const docClient = new AWS.DynamoDB.DocumentClient();
-const transcodedChunksBucket = process.env.TRANSCODED_CHUNKS_BUCKET;
 const endBucket = process.env.END_BUCKET;
 const jobsTable = process.env.JOBS_TABLE;
 const videosTable = process.env.VIDEOS_TABLE;
-const manifestPath = `/tmp/manifest.ffcat`;
 
 const getJobData = async (jobId) => {
   const dbQueryParams = {
@@ -51,17 +47,18 @@ const writeJob = async (putParams) => {
     .promise();
 };
 
-const recordJobCompleted = async ({ id: jobId, createdAt }) => {
+const recordJobCompleted = async ({ id: jobId, createdAt, outputKey }) => {
   // update job status on DB to completed
 
   const jobEndTime = Date.now();
   const timeToCompleteSeconds = (jobEndTime - createdAt) / 1000;
+  const completedUrl = `https://${endBucket}.s3.amazonaws.com/${outputKey}`;
 
   const putParams = {
     TableName: jobsTable,
     Key: { id: jobId },
     UpdateExpression:
-      "set #s = :stat, completedAt = :completedAt, timeToComplete = :timeToComplete",
+      "set #s = :stat, completedAt = :completedAt, timeToComplete = :timeToComplete, versionUrl = :completedUrl",
     ExpressionAttributeNames: {
       "#s": "status",
     },
@@ -69,6 +66,7 @@ const recordJobCompleted = async ({ id: jobId, createdAt }) => {
       ":stat": "completed",
       ":completedAt": jobEndTime,
       ":timeToComplete": timeToCompleteSeconds,
+      ":completedUrl": completedUrl,
     },
     ReturnValues: `UPDATED_NEW`,
   };
@@ -77,10 +75,10 @@ const recordJobCompleted = async ({ id: jobId, createdAt }) => {
 };
 
 const concatHttpToS3 = async (jobData) => {
-  const { id: jobId, filename, outputType } = jobData;
+  const { id: jobId, filename, outputType, outputKey } = jobData;
   const manifestPath = `https://bento-transcoded-segments.s3.amazonaws.com/${jobId}/manifest.ffcat`;
-  const videoKey = `${jobId}-${filename}${outputType}`;
-  const s3Path = `s3://bento-video-end/${videoKey}`;
+  // const videoKey = `${jobId}-${filename}${outputType}`;
+  const s3Path = `s3://bento-video-end/${outputKey}`;
 
   console.log(`Attempting http concat with output to ${s3Path}`);
 
