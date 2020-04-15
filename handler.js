@@ -104,16 +104,8 @@ module.exports.simpleMerge = async (event) => {
   let jobData = await getJobData(jobId);
   jobData = { ...jobData.Item };
 
-  const { inputType, outputType, audioType, filename } = jobData;
-
-  const videoPaths = {
-    mergedPath: `/tmp/${filename}-Merged${outputType}`,
-    originalPath: `/tmp/${filename}-Original${inputType}`,
-    audioPath: `/tmp/${filename}-Audio${audioType}`,
-    completedPath: `/tmp/${filename}-Completed${outputType}`,
-  };
-
   concatHttpToS3(jobData);
+
   if (simulateInvoke) {
     console.log(`Simulation complete, exiting!`);
     return;
