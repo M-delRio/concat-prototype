@@ -74,6 +74,39 @@ const recordJobCompleted = async ({ id: jobId, createdAt, outputKey }) => {
   await writeJob(putParams);
 };
 
+const incrementVersionCount = async ({ videoId }) => {
+  // const videoId = await getVideoId(jobId);
+
+  const updateParams = {
+    Key: {
+      id: videoId,
+    },
+    TableName: videosTable,
+    UpdateExpression: "SET versions = versions + :val",
+    ExpressionAttributeValues: {
+      ":val": 1,
+    },
+    ReturnValues: "UPDATED_NEW",
+  };
+
+  console.log(`Attempting to increment version counter for video ${videoId}`);
+
+  await docClient
+    .update(updateParams)
+    .promise()
+    .then((data) => {
+      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+      return data;
+    })
+    .catch((err) => {
+      console.error(
+        "Unable to update item. Error JSON:",
+        JSON.stringify(err, null, 2)
+      );
+      return null;
+    });
+};
+
 const concatHttpToS3 = async (jobData) => {
   const { id: jobId, filename, outputType, outputKey } = jobData;
   const manifestPath = `https://bento-transcoded-segments.s3.amazonaws.com/${jobId}/manifest.ffcat`;
@@ -110,4 +143,5 @@ module.exports.simpleMerge = async (event) => {
   }
 
   await recordJobCompleted(jobData);
+  await incrementVersionCount(jobData);
 };
